@@ -1,6 +1,8 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle} from '@ionic/react';
+import React, { useState, useEffect } from "react";
 import './Card.css';
 import axios from "axios";
+import { waitFor } from '@testing-library/dom';
 
 interface Data{
     type: string,
@@ -13,18 +15,20 @@ interface ContainerProps {
     index: number;
 }
 
-function getgif(type: string){
-    if (type.includes('bank-draft'))
+
+function getgif(type: string){ 
+  
+  if (type.includes('bank-draft'))
     {
-        return 'https://media.giphy.com/media/cPxRDvlSj9QKA/giphy.gif'
+      return 'https://media.giphy.com/media/cPxRDvlSj9QKA/giphy.gif'
     }
     else if (type.includes('bill-of-lading'))
     {
-        return 'https://media.giphy.com/media/l0ExdMHUDKteztyfe/giphy.gif'
+      return 'https://media.giphy.com/media/l0ExdMHUDKteztyfe/giphy.gif'
     }
     else if (type.includes('invoice'))
     {
-        return 'https://media.giphy.com/media/E0cyxhawhe9dm/giphy.gif'
+      return 'https://media.giphy.com/media/LHZyixOnHwDDy/giphy.gif'
     }
 }
 
@@ -40,6 +44,15 @@ async function get_gif(url:string) {
 
 
 const Card: React.FC<ContainerProps> = (props) => {
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(false)
+
+  useEffect(
+    () => {
+      const timeout = setTimeout(() => {setShow(true)}, 5000)
+      return () => clearTimeout(timeout)
+    }, [show])
+
   return (
           <IonCard className='Card'>
             <IonCardHeader>
@@ -48,7 +61,7 @@ const Card: React.FC<ContainerProps> = (props) => {
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
-              <img src={getgif(props.data.type)} className='ImageGIF'/>
+              <img src={show&&loaded? getgif(props.data.type): '/thumbnails/loading.gif'} className='ImageGIF' onLoad={()=>setLoaded(true)}/>
             </IonCardContent>
           </IonCard>
   )};
