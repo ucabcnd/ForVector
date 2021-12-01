@@ -1,0 +1,10 @@
+.Card{
+    height:200pt;
+    width:33%;
+    display:inline-block;
+    margin: 0px;
+}
+
+.ImageGIF{
+    width:100%;
+}
