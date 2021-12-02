@@ -1,6 +1,10 @@
+.Item{
+    display: inline-block;
+    width: 33%;
+}
+
 .Card{
     height:200pt;
-    width:33%;
     display:inline-block;
     margin: 0px;
 }
