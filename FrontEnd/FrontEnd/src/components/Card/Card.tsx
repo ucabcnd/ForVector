@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle} from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle,IonAlert} from '@ionic/react';
 import React, { useState, useEffect } from "react";
 import './Card.css';
 import axios from "axios";
@@ -16,7 +16,7 @@ interface ContainerProps {
 }
 
 
-function getgif(type: string){ 
+function getgif(type: string):string{ 
   
   if (type.includes('bank-draft'))
     {
@@ -30,39 +30,46 @@ function getgif(type: string){
     {
       return 'https://media.giphy.com/media/LHZyixOnHwDDy/giphy.gif'
     }
-}
-
-async function get_gif(url:string) {
-  try {
-    let response = await axios.get(url);
-    return response.data;
-  } catch (e) {
-    console.log("Error getting slides: ", e);
-    return [];
-  }
+    else{
+      return '';
+    }
 }
 
 
 const Card: React.FC<ContainerProps> = (props) => {
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [show, setShow] = useState<boolean>(false)
+  const [show, setShow] = useState<boolean>(false);
+  const [showExpanded, setShowExpanded] = useState<boolean>(false);
+  const [gifURL,setGifURL] = useState<string>('');
+
+  function image_loaded(type:string){
+    setLoaded(true);
+    setGifURL(getgif(type));
+  }
 
   useEffect(
     () => {
-      const timeout = setTimeout(() => {setShow(true)}, 5000)
+      const timeout = setTimeout(() => {setShow(true)}, 2000)
       return () => clearTimeout(timeout)
     }, [show])
 
   return (
-          <IonCard className='Card'>
+          <IonCard className='Card' onClick={() => setShowExpanded(true)}>
             <IonCardHeader>
               <IonCardTitle>
                 {props.data.title}
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
-              <img src={show&&loaded? getgif(props.data.type): '/thumbnails/loading.gif'} className='ImageGIF' onLoad={()=>setLoaded(true)}/>
+              <img src={show&&loaded? getgif(props.data.type): '/thumbnails/loading.gif'} className='ImageGIF' onLoad={()=>image_loaded(props.data.type)}/>
             </IonCardContent>
+            <IonAlert
+              isOpen={showExpanded}
+              onDidDismiss={() => setShowExpanded(false)}
+              cssClass='AlertClass'
+              header={props.data.title}
+              message={'<img src=' + gifURL + ' style=\'size:200%;\' />'}
+            />
           </IonCard>
   )};
 

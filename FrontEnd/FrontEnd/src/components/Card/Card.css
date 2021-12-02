@@ -8,3 +8,7 @@
 .ImageGIF{
     width:100%;
 }
+
+.AlertClass{
+    --min-width:50%;
+}
