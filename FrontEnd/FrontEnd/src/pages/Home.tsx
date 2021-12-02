@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonReorderGroup, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 import SampleData from '../sampleinput.json';
@@ -14,9 +14,11 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {SampleData.map((info, i) => (
-          <Card key={i} data={info} index={i}/>
-        ))}
+        <IonReorderGroup>
+          {SampleData.map((info, i) => (
+            <Card key={i} data={info} index={i} />
+          ))}
+        </IonReorderGroup>
       </IonContent>
     </IonPage>
   );
