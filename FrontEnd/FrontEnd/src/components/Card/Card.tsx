@@ -51,8 +51,9 @@ async function load_url_gif(type: string,seturl:React.Dispatch<React.SetStateAct
 
 
 const Card: React.FC<ContainerProps> = (props) => {
+  const [show, setShow] = useState<boolean>(false);
   const [showExpanded, setShowExpanded] = useState<boolean>(false);
-  const [gifURL, setGifURL] = useState<string>('/thumbnails/loading.gif');
+  const [gifURL, setGifURL] = useState<string>('');
 
   useEffect(
     ()=>{
@@ -60,12 +61,11 @@ const Card: React.FC<ContainerProps> = (props) => {
       load_url_gif(props.data.type,setGifURL);
     },[]);
 
-  useIonViewWillEnter(
+  useEffect(
     ()=>{
-      console.log("card");
-      load_url_gif(props.data.type,setGifURL);
-    }
-  );
+      const timeout = setTimeout(() => { setShow(true) }, 1000)
+      return () => clearTimeout(timeout)
+    },[]);  
 
   return (
     <IonItem className="Item">
@@ -76,7 +76,7 @@ const Card: React.FC<ContainerProps> = (props) => {
           </IonCardTitle>
         </IonCardHeader>
         <IonCardContent>
-          <img src={gifURL} className='ImageGIF'/>
+          <img src={show?gifURL:'/thumbnails/loading.gif'} className='ImageGIF'/>
         </IonCardContent>
         <IonAlert
           isOpen={showExpanded}

@@ -11,6 +11,7 @@
 
 .ImageGIF{
     width:100%;
+    background: transparent url('loading.gif') no-repeat scroll center center;
 }
 
 .AlertClass{
