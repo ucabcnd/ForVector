@@ -1,5 +1,6 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,useIonViewWillEnter } from '@ionic/react';
 import './Home.css';
+import axios from "axios";
 import SampleData from '../sampleinput.json';
 import { ItemReorderEventDetail } from '@ionic/core';
 import {DragDropContext,Droppable,Draggable, DropResult} from 'react-beautiful-dnd';
@@ -17,8 +18,31 @@ function doReorder(event: CustomEvent<ItemReorderEventDetail>) {
   event.detail.complete();
 }
 
+type card = {
+  title: string,
+  type: string,
+  position: number
+}
+
+//get response from API
+async function get_all_cards() {
+  try {
+    const url = "http://127.0.0.1:8000/get_all_cards";
+    let response = await axios.get(url);
+    return response.data;
+  } catch (e) {
+    console.log("Error getting card data: ", e);
+    return [];
+  }
+}
+
+async function set_cards(updatecards: React.Dispatch<React.SetStateAction<any>>){
+  updatecards(await get_all_cards());
+}
+
+
 const Home: React.FC = () => {
-  const [cards,updateCards] = useState(SampleData);
+  const [cards,updateCards] = useState<Array<card>>([]);
 
   function handleOnDragEnd(result: DropResult){
     if (!result.destination) return;
@@ -29,33 +53,55 @@ const Home: React.FC = () => {
     updateCards(items);
   }
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Cat GIFS</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId="cards" direction='horizontal'>
-            {(provided)=>(
-              <ul {...provided.droppableProps} ref={provided.innerRef}>
-                {cards.map((info, i) => (
-                <Draggable key={info.title} draggableId={info.title} index={i}>
-                    {(provided)=>(
-                      <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className="CardList"><Card data={info} index={i} /></li>
-                    )} 
-                </Draggable>
-                ))}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </IonContent>
-    </IonPage>
+  useIonViewWillEnter(
+    ()=>{
+      set_cards(updateCards);
+    }
   );
+
+  if (cards.length > 0){
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Cat GIFS</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="cards" direction='horizontal'>
+              {(provided)=>(
+                <ul {...provided.droppableProps} ref={provided.innerRef}>
+                  {cards.map((info, i) => (
+                  <Draggable key={info.title} draggableId={info.title} index={i}>
+                      {(provided)=>(
+                        <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className="CardList"><Card data={info} index={i} /></li>
+                      )} 
+                  </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </IonContent>
+      </IonPage>
+    )
+  }
+  else{
+    return(
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Cat GIFS</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          Please Wait whilst this page loads
+        </IonContent>
+      </IonPage>
+    )
+  }
 };
 
 export default Home;

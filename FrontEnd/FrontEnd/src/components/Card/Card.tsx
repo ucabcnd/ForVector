@@ -1,5 +1,6 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonAlert, IonItem, IonReorder, IonIcon } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonAlert, IonItem, useIonViewWillEnter} from '@ionic/react';
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import './Card.css';
 import { square } from 'ionicons/icons';
 
@@ -31,23 +32,40 @@ function getgif(type: string): string {
   }
 }
 
+async function get_gif(type: string) {
+  try {
+    const url = "http://127.0.0.1:8000/get_GIF/" + type;
+    let response = await axios.get(url);
+    console.log(response);
+    return response.data;
+  } catch (e) {
+    console.log("Error getting GIF URL from database: ", e);
+    return [];
+  }
+}
+
+async function load_url_gif(type: string,seturl:React.Dispatch<React.SetStateAction<string>>){
+  let url = await get_gif(type);
+  seturl(url);
+}
+
 
 const Card: React.FC<ContainerProps> = (props) => {
-  const [loaded, setLoaded] = useState<boolean>(false);
-  const [show, setShow] = useState<boolean>(false);
   const [showExpanded, setShowExpanded] = useState<boolean>(false);
-  const [gifURL, setGifURL] = useState<string>('');
-
-  function image_loaded(type: string) {
-    setLoaded(true);
-    setGifURL(getgif(type));
-  }
+  const [gifURL, setGifURL] = useState<string>('/thumbnails/loading.gif');
 
   useEffect(
-    () => {
-      const timeout = setTimeout(() => { setShow(true) }, 2000)
-      return () => clearTimeout(timeout)
-    }, [show])
+    ()=>{
+      console.log("card");
+      load_url_gif(props.data.type,setGifURL);
+    },[]);
+
+  useIonViewWillEnter(
+    ()=>{
+      console.log("card");
+      load_url_gif(props.data.type,setGifURL);
+    }
+  );
 
   return (
     <IonItem className="Item">
@@ -58,7 +76,7 @@ const Card: React.FC<ContainerProps> = (props) => {
           </IonCardTitle>
         </IonCardHeader>
         <IonCardContent>
-          <img src={show && loaded ? getgif(props.data.type) : '/thumbnails/loading.gif'} className='ImageGIF' onLoad={() => image_loaded(props.data.type)} />
+          <img src={gifURL} className='ImageGIF'/>
         </IonCardContent>
         <IonAlert
           isOpen={showExpanded}
