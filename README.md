@@ -11,8 +11,6 @@ The reordering is broken at the moment and not complete. I would need to have mo
 
 Domains and Ports for CORS are enabled.
 
-In addition to this, currently only the front-end service is included in the docker-compose microservices architecture. I intend to resolve this soon.
-
 Documentation for the API can be viewed after starting the app. api can be accessed on port 8000. i.e: http://127.0.0.1:8000 and go to '/docs' for the documentation (http://127.0.0.1:8000/docs). There are currently 3 calls for getting all cards, all gifs, and a particular gif given a card 'type'. In the future more calls can exist for saving reordering, adding new cards, new gifs, managing users for multi-user support etc. 
 
 To run the app please follow the following steps
@@ -21,7 +19,5 @@ To run the app please follow the following steps
           -node.js
           -Docker Desktop
           -Python 3.9 or higher(will need FASTAPI and uvicorn installed)
-2. To start the frontend simply 'docker-compose build' and 'docker-compose up' from the main directory. The front-end should start on your localhost port 3000
-3. To start the backend navigate to "BackEnd\venv\Scripts" in a terminal, run activate.bat to activate the python virtual environment
-4. Navigate to "\BackEnd" run the following command 'uvicorn api:api --reload'
-5. In browser, run the app by navigating to 'http://localhost:3000'
+2. To start the frontend simply 'docker-compose build' and 'docker-compose up' from the main directory. The front-end should start on your localhost port 3000, the api on port 8000
+3. In browser, run the app by navigating to 'http://localhost:3000'
