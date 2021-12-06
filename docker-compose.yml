@@ -1,0 +1,21 @@
+version: "2.2.1"
+services:
+  frontend:
+    build:
+      context: ./FrontEnd/FrontEnd
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    image: forvector:frontend
+    container_name: frontend_container
+    command: npm start
+  backend:
+    build:
+      context: ./BackEnd
+      dockerfile: Dockerfile
+    volumes:
+      - ./BackEnd:/backend
+    ports:
+      - 8000:8000
+    image: forvector:backend
+    container_name: backend_container

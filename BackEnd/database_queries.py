@@ -1,7 +1,11 @@
 import sqlite3
+import os
 
 def connect_to_db():
-    conn = sqlite3.connect('DBForVector.db')
+    if os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False):
+        conn = sqlite3.connect('/backend/DBForVector.db')
+    else:
+        conn = sqlite3.connect('DBForVector.db')
     cur = conn.cursor()
     return [conn,cur]
 
