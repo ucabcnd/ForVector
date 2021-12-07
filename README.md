@@ -18,6 +18,7 @@ To run the app please follow the following steps
 1. Have the following installed
           -node.js
           -Docker Desktop
-          -Python 3.9 or higher(will need FASTAPI and uvicorn installed)
-2. To start the frontend simply 'docker-compose build' and 'docker-compose up' from the main directory. The front-end should start on your localhost port 3000, the api on port 8000
-3. In browser, run the app by navigating to 'http://localhost:3000'
+          -Python 3.9 or higher(will need FASTAPI and uvicorn libraries installed)
+2.Run npm install in the FrontEnd/FrontEnd folder to install all required dependancies for the frontend.
+3.To start the frontend simply 'docker-compose build' and 'docker-compose up' from the main directory. The front-end should start on your localhost port 3000, the api on port 8000
+4. In browser, run the app by navigating to 'http://localhost:3000'
